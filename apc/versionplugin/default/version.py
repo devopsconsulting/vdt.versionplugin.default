@@ -1,3 +1,8 @@
+"""
+This file contains only functions that deal with the version
+of the repository. It can set a new version as a tag and look
+up the current version.
+"""
 import subprocess
 import logging
 
@@ -12,6 +17,12 @@ __all__ = ('get_version', 'set_version')
 
 
 def get_version():
+    """
+    Retrieve the version from the repo.
+    
+    It can be assumed that this script will be ran in the
+    root of the repository.
+    """
     # First try to get the current version using "git describe".
     # look for tags below the current commit, so we will never
     # tag the same commit twice!
@@ -31,6 +42,9 @@ def get_version():
 
 
 def set_version(version):
+    """
+    Create a new tag on this repo with the version as specified.
+    """
     if version.annotated:
         log.debug("writing annotated version {0}".format(version))
         if version.changelog and version.changelog != "":
