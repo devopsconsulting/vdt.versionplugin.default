@@ -6,7 +6,7 @@ up the current version.
 import subprocess
 import logging
 
-from apc.version.shared import VersionNotFound, Version
+from apc.version.shared import VersionError, VersionNotFound, Version
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -51,7 +51,7 @@ def set_version(version):
             args = ["git", "tag", "-a", str(version), "-m", version.changelog]
             subprocess.check_call(args)
         else:
-            raise StandardError("Changelog can not be empty when writing an annotated tag.")
+            raise VersionError("Changelog can not be empty when writing an annotated tag.")
     else:
         log.debug("writing version {0}".format(version))
         args = ["git", "tag", str(version)]
