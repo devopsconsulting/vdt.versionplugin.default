@@ -5,6 +5,7 @@ up the current version.
 """
 import subprocess
 import logging
+import os
 
 from apc.version.shared import VersionError, VersionNotFound, Version
 
@@ -24,9 +25,7 @@ def get_version():
     root of the repository.
     """
     # First try to get the current version using "git describe".
-    # look for tags below the current commit, so we will never
-    # tag the same commit twice!
-    args = ['git', 'describe', '--abbrev=0', '--tags', 'HEAD^']
+    args = ['git', 'describe', '--abbrev=0', '--tags']
     version = None
     try:
         line = subprocess.check_output(args, stderr=None)
@@ -44,15 +43,32 @@ def get_version():
 def set_version(version):
     """
     Create a new tag on this repo with the version as specified.
+    
+    This function should always return the version.
+    If the version could not be updated because of an error,
+    the current version should be returned, so there will never
+    be any packages built out of untagged versions!
     """
-    if version.annotated:
-        log.debug("writing annotated version {0}".format(version))
-        if version.changelog and version.changelog != "":
-            args = ["git", "tag", "-a", str(version), "-m", version.changelog]
-            subprocess.check_call(args)
+    with open(os.devnull, "w") as devnull:        
+        find_tags_on_head = ['git', 'describe', '--exact-match', '--tags', 'HEAD']
+
+        # check if the current revision is allready tagged.
+        if subprocess.call(find_tags_on_head, stdout=devnull, stderr=devnull) != 0:
+            if version.annotated:
+                log.debug("writing annotated version {0}".format(version))
+                if version.changelog and version.changelog != "":
+                    args = ["git", "tag", "-a", str(version), "-m", version.changelog]
+                    subprocess.check_call(args)
+                else:
+                    raise VersionError("Changelog can not be empty when writing an annotated tag.")
+            else:
+                log.debug("writing version {0}".format(version))
+                args = ["git", "tag", str(version)]
+                subprocess.check_call(args)
+
         else:
-            raise VersionError("Changelog can not be empty when writing an annotated tag.")
-    else:
-        log.debug("writing version {0}".format(version))
-        args = ["git", "tag", str(version)]
-        subprocess.check_call(args)
+            tag = subprocess.check_output(find_tags_on_head)
+            log.warn("Not tagging, this revision is allready tagged as: {0}".format(tag))
+            version = Version(tag)
+        
+    return version
