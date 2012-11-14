@@ -10,7 +10,6 @@ import os
 from apc.version.shared import VersionError, VersionNotFound, Version
 
 
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger('apc.versionplugin.default')
 
 
