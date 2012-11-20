@@ -7,10 +7,10 @@ import subprocess
 import logging
 import os
 
-from apc.version.shared import VersionError, VersionNotFound, Version
+from vdt.version.shared import VersionError, VersionNotFound, Version
 
 
-log = logging.getLogger('apc.versionplugin.default')
+log = logging.getLogger('vdt.versionplugin.default')
 
 
 __all__ = ('get_version', 'set_version')

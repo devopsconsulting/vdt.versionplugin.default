@@ -1,7 +1,7 @@
 # coding: utf-8
 from setuptools import find_packages, setup
 
-pkgname = "apc.versionplugin.default"
+pkgname = "vdt.versionplugin.default"
 
 setup(name=pkgname,
       version="0.0.2",
@@ -12,11 +12,11 @@ setup(name=pkgname,
       maintainer_email="cosmin.luta@avira.com",
       packages=find_packages(),
       include_package_data=True,
-      namespace_packages=['apc', 'apc.versionplugin'],
+      namespace_packages=['vdt', 'vdt.versionplugin'],
       zip_safe=True,
       install_requires=[
           "setuptools",
-          "apc.version",
+          "vdt.version",
       ],
       entry_points={},
 )
