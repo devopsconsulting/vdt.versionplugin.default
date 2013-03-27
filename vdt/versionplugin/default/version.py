@@ -16,7 +16,7 @@ log = logging.getLogger('vdt.versionplugin.default')
 __all__ = ('get_version', 'set_version')
 
 
-def get_version():
+def get_version(version_args):
     """
     Retrieve the version from the repo.
     
@@ -35,7 +35,8 @@ def get_version():
     if not version:
         raise VersionNotFound("cannot find the current version. Please create an annotated tag x.y.z!")
 
-    return Version(version)
+    log.debug("Extra argument are %s" % version_args)
+    return Version(version, extra_args=version_args)
 
 
 
@@ -68,6 +69,6 @@ def set_version(version):
         else:
             tag = subprocess.check_output(find_tags_on_head)
             log.warn("Not tagging, this revision is allready tagged as: {0}".format(tag))
-            version = Version(tag)
+            version = Version(tag, extra_args=version.extra_args)
         
     return version
