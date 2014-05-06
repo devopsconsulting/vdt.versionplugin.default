@@ -68,7 +68,7 @@ def set_version(version):
 
         else:
             tag = subprocess.check_output(find_tags_on_head)
-            log.warn("Not tagging, this revision is allready tagged as: {0}".format(tag))
+            log.warn("Not tagging, this revision is already tagged as: {0}".format(tag))
             version = Version(tag, extra_args=version.extra_args)
         
     return version
