@@ -36,7 +36,7 @@ def get_version(version_args):
         raise VersionNotFound("Cannot find the current version. Please create an annotated tag x.y.z!")
 
     log.debug("Extra argument are %s" % version_args)
-    return Version(version, extra_args=version_args)
+    return Version(version.decode('utf-8'), extra_args=version_args)
 
 
 
@@ -69,6 +69,6 @@ def set_version(version):
         else:
             tag = subprocess.check_output(find_tags_on_head)
             log.warn("Not tagging, this revision is already tagged as: {0}".format(tag))
-            version = Version(tag, extra_args=version.extra_args)
+            version = Version(tag.decode('utf-8'), extra_args=version.extra_args)
         
     return version
